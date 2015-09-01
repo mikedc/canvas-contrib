@@ -36,19 +36,16 @@ $results1 = (Invoke-WebRequest -Headers $headers -InFile $InFile -Method POST -C
 $results1.Content | Out-File $status_log_path
 $results = ($results1.Content | ConvertFrom-Json)
 #$results.id | Out-String
-do{
-  Write-Host $status_line
-  $status_url = "https://$domain/api/v1/accounts/"+$account_id+"/sis_imports/"+$results.id
-  $results1 = (Invoke-WebRequest -Headers $headers -Method GET -Uri $status_url) #-PassThru -OutFile $outputPath$t"-status.log"
-  $results1.Content | Out-File -Append $status_log_path
-  $results = ($results1.Content | ConvertFrom-Json)
-  Start-Sleep -s 5
-  #$results.id | Out-String
- if($results -eq $null){
-    break
-  }
+Write-Host $status_line
+Start-Sleep -s 60
+$status_url = "https://$domain/api/v1/accounts/"+$account_id+"/sis_imports/"+$results.id
+$results1 = (Invoke-WebRequest -Headers $headers -Method GET -Uri $status_url) #-PassThru -OutFile $outputPath$t"-status.log"
+$results1.Content | Out-File -Append $status_log_path
+$results = ($results1.Content | ConvertFrom-Json)
+#$results.id | Out-String
+if($results -eq $null){
+break
 }
-while($results.progress -lt 100 -and $results.workflow_state -ne "failed_with_messages")
 $results1.Content | Out-File -Append $status_log_path
 
 # The sis import is done, you might do something else here like trigger course copies
