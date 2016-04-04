@@ -60,7 +60,7 @@ if($file_list.length -gt 0){
         }
         $status_msg = "Import created with ID "+$results.id
         write-host "   $status_msg"
-        do{
+#        do{
           Start-Sleep -s $checkTimeInterval
           Try {
               $status_url = "https://$domain/api/v1/accounts/self/sis_imports/"+$results.id
@@ -80,8 +80,8 @@ if($file_list.length -gt 0){
             write-host "   Unable to retreive results for the SIS import."
             break
          }
-        }
-        while($results.progress -lt 100 -and $results.workflow_state -ne "failed_with_messages")
+#        }
+#        while($results.progress -lt 100 -and $results.workflow_state -ne "failed_with_messages")
         $results1.Content | Out-File -Append $status_log_path
         $status_msg = "   Results:`n      Workflow State: "+$results.workflow_state+"`n      Progress: "+$results.progress+"%`n`n"
         write-host "$status_msg"
